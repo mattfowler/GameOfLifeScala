@@ -1,6 +1,6 @@
 package cell
 
-final class DeadCell(neighbors:List[Cell]) extends Cell(neighbors) {
+final class DeadCell(private val neighbors:List[Cell]) extends Cell(neighbors) {
 
   override def isLive:Boolean = false
 

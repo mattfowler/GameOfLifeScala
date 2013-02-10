@@ -1,6 +1,6 @@
 package cell
 
-abstract class Cell(val neighbors:List[Cell]) {
+abstract class Cell(private val neighbors:List[Cell]) {
 
   def getNextGeneration:Cell
 
