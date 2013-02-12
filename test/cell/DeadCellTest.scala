@@ -13,23 +13,31 @@ class DeadCellTest extends FunSpec with ShouldMatchers {
                                 new DeadCell(List()),
                                 new LiveCell(List()))
       val threeNeighborCell = new DeadCell(threeNeighbors)
+      val nextGen = threeNeighborCell.getNextGeneration
 
-      threeNeighborCell.getNextGeneration should equal (new LiveCell(threeNeighbors))
+      nextGen.isLive should be (true)
+      nextGen.neighbors should equal(threeNeighbors)
     }
 
     it("should stay dead if it has anything other than three live neighbors") {
       val neighbors = List(new LiveCell(List()))
       val subjectCell = new DeadCell(neighbors)
 
-      subjectCell.getNextGeneration should equal (new DeadCell(neighbors))
+      val subjectNextGen = subjectCell.getNextGeneration
+
+      subjectNextGen.isLive should be (false)
+      subjectNextGen.neighbors should equal(neighbors)
 
       val multipleNeighbors = List(new LiveCell(List()),
                                    new LiveCell(List()),
                                    new LiveCell(List()),
                                    new LiveCell(List()))
-      val multiNeighborCell = new DeadCell(multipleNeighbors)
 
-      multiNeighborCell should equal (new DeadCell(multipleNeighbors))
+      val multiNeighborCell = new DeadCell(multipleNeighbors)
+      val nextGen = multiNeighborCell.getNextGeneration
+
+      nextGen.isLive should be (false)
+      nextGen.neighbors should equal(multipleNeighbors)
     }
   }
 

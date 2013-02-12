@@ -11,7 +11,10 @@ class LiveCellTest extends FunSpec with ShouldMatchers {
       val neighbors = List(new LiveCell(List()), new DeadCell(List()))
       val subjectCell = new LiveCell(neighbors)
 
-      subjectCell.getNextGeneration should equal (new DeadCell(neighbors))
+      val nextGen = subjectCell.getNextGeneration
+
+      nextGen.isLive should be (false)
+      nextGen.neighbors should equal(neighbors)
     }
 
     it("should die if it has too many live neighbors") {
@@ -21,7 +24,10 @@ class LiveCellTest extends FunSpec with ShouldMatchers {
                            new LiveCell(List()))
       val subjectCell = new LiveCell(neighbors)
 
-      subjectCell.getNextGeneration should equal (new DeadCell(neighbors))
+      val nextGen = subjectCell.getNextGeneration
+
+      nextGen.isLive should be (false)
+      nextGen.neighbors should equal(neighbors)
     }
 
     it("should live if it has two or three neighbors") {
@@ -31,7 +37,11 @@ class LiveCellTest extends FunSpec with ShouldMatchers {
                                 new LiveCell(List()))
       val threeNeighborCell = new LiveCell(threeNeighbors)
 
-      threeNeighborCell.getNextGeneration should equal (new LiveCell(threeNeighbors))
+      val nextGen = threeNeighborCell.getNextGeneration
+
+      nextGen.isLive should be (true)
+      nextGen.neighbors should equal(threeNeighbors)
+
 
       val twoNeighbors = List(new LiveCell(List()),
                               new DeadCell(List()),
@@ -39,8 +49,10 @@ class LiveCellTest extends FunSpec with ShouldMatchers {
                               new LiveCell(List()))
       val twoNeighborCell = new LiveCell(twoNeighbors)
 
-      twoNeighborCell.getNextGeneration should equal (new LiveCell(twoNeighbors))
+      val twoNeighborNextGen = twoNeighborCell.getNextGeneration
 
+      twoNeighborNextGen.isLive should be (true)
+      twoNeighborNextGen.neighbors should equal(twoNeighbors)
     }
   }
 }
