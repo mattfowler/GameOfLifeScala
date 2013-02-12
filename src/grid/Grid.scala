@@ -10,6 +10,24 @@ final class Grid(private val dimension: Int) {
     return grid;
   }
 
+  def addLiveCell(row:Int, column:Int) = {
+    val cell = grid(row)(column)
+    val newCell: Cell = liveCellWithUpdatedNeighbors(cell)
+    grid(row)(column) = newCell
+  }
+
+  private def liveCellWithUpdatedNeighbors(oldCell:Cell): Cell = {
+    val newCell = new LiveCell(oldCell.neighbors)
+
+    newCell.neighbors.foreach {
+      c: Cell =>
+        var newCells = c.neighbors.filterNot(_.equals(oldCell))
+        newCells = newCells :+ newCell
+        c.neighbors = newCells
+    }
+    newCell
+  }
+
   private def createGrid(dimension: Int): Array[Array[Cell]] = {
     grid = Array.fill(dimension, dimension)(new DeadCell(List()))
     for (i <- 0 to dimension - 1) {
