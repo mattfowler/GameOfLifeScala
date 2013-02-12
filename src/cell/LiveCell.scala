@@ -10,5 +10,4 @@ final class LiveCell(neighbors:List[Cell]) extends Cell(neighbors) {
     }
     this
   }
-
 }
