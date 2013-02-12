@@ -10,14 +10,28 @@ final class Grid(private val dimension: Int) {
     return grid;
   }
 
-  def addLiveCell(row:Int, column:Int) = {
+  def setLiveCellAt(row:Int, column:Int) = {
     val cell = grid(row)(column)
     val newCell: Cell = liveCellWithUpdatedNeighbors(cell)
     grid(row)(column) = newCell
   }
 
-  private def liveCellWithUpdatedNeighbors(oldCell:Cell): Cell = {
-    val newCell = new LiveCell(oldCell.neighbors)
+  def setDeadCellAt(row:Int, column:Int) = {
+    val cell = grid(row)(column)
+    val newCell: Cell = deadCellWithUpdatedNeighbors(cell)
+    grid(row)(column) = newCell
+  }
+
+  private def liveCellWithUpdatedNeighbors(oldCell:Cell):Cell = {
+    cellWithUpdatedNeighbors(oldCell, true)
+  }
+
+  private def deadCellWithUpdatedNeighbors(oldCell:Cell):Cell = {
+    cellWithUpdatedNeighbors(oldCell, false)
+  }
+
+  private def cellWithUpdatedNeighbors(oldCell:Cell, isLive:Boolean): Cell = {
+    val newCell = if(isLive) new LiveCell(oldCell.neighbors) else new DeadCell(oldCell.neighbors)
 
     newCell.neighbors.foreach {
       c: Cell =>

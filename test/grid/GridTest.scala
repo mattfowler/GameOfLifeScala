@@ -28,13 +28,28 @@ class GridTest extends FunSpec with ShouldMatchers {
     }
   }
 
-  describe("Adding live cells to the grid") {
+  describe("Setting live cells on the grid") {
     val subjectGrid:Grid = new Grid(2)
-    subjectGrid.addLiveCell(0, 0)
+    subjectGrid.setLiveCellAt(0, 0)
     val firstGeneration = subjectGrid.getCurrentGeneration
 
     it("should have a live cell") {
       firstGeneration(0)(0).isLive should be(true)
+    }
+
+    it("should have all of its neighbors linked up properly") {
+      assertNeighborsProperlyLinked(firstGeneration)
+    }
+  }
+
+  describe("Setting dead cells on the grid") {
+    val subjectGrid:Grid = new Grid(2)
+    subjectGrid.setLiveCellAt(0, 0)
+    subjectGrid.setDeadCellAt(0, 0)
+    val firstGeneration = subjectGrid.getCurrentGeneration
+
+    it("should have a dead cell") {
+      firstGeneration(0)(0).isLive should be(false)
     }
 
     it("should have all of its neighbors linked up properly") {
