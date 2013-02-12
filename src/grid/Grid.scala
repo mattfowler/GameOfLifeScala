@@ -10,7 +10,7 @@ final class Grid(private val dimension: Int) {
     return grid;
   }
 
-  def createGrid(dimension: Int): Array[Array[Cell]] = {
+  private def createGrid(dimension: Int): Array[Array[Cell]] = {
     grid = Array.fill(dimension, dimension)(new DeadCell(List()))
     for (i <- 0 to dimension - 1) {
       for (j <- 0 to dimension - 1) {
