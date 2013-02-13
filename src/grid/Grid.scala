@@ -14,9 +14,7 @@ final class Grid(private val dimension: Int) {
         grid(i)(j) = grid(i)(j).getNextGeneration
       }
     }
-    updateNeighbors
-
-    grid
+    updateNeighbors(grid)
   }
 
   def setLiveCellAt(row:Int, column:Int) =
@@ -38,20 +36,20 @@ final class Grid(private val dimension: Int) {
 
   private def createGrid(dimension: Int): Array[Array[Cell]] = {
     val grid:Array[Array[Cell]] = Array.fill(dimension, dimension)(new DeadCell(List()))
-    updateNeighbors
-    grid
+    updateNeighbors(grid)
   }
 
-  private def updateNeighbors = {
+  private def updateNeighbors(grid:Array[Array[Cell]]):Array[Array[Cell]] = {
     for (i <- 0 to dimension - 1) {
       for (j <- 0 to dimension - 1) {
         val neighborIndices = for(r <- i-1 to i+1; c <- j-1 to j+1) yield (r, c)
-        grid(i)(j).neighbors = neighborList(neighborIndices.filter(!_.equals((i,j))))
+        grid(i)(j).neighbors = neighborList(neighborIndices.filter(!_.equals((i,j))), grid)
       }
     }
+    grid
   }
 
-  private def neighborList(indices: IndexedSeq[(Int, Int)]): List[Cell] = {
+  private def neighborList(indices: IndexedSeq[(Int, Int)], grid:Array[Array[Cell]]): List[Cell] = {
     if (indices.isEmpty) {
       Nil
     } else {
@@ -59,9 +57,9 @@ final class Grid(private val dimension: Int) {
       val row = rowAndCol._1
       val col = rowAndCol._2
       if (row < 0 || col < 0 || row > grid.length - 1 || col > grid.length - 1) {
-        neighborList(indices.drop(1))
+        neighborList(indices.drop(1), grid)
       } else {
-        grid(row)(col) :: neighborList(indices.drop(1))
+        grid(row)(col) :: neighborList(indices.drop(1), grid)
       }
     }
   }
