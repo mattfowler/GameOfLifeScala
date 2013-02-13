@@ -4,7 +4,7 @@ import cell.{LiveCell, Cell, DeadCell}
 
 final class Grid(private val dimension: Int) {
 
-  private var grid: Array[Array[Cell]] = createGrid(dimension)
+  private val grid: Array[Array[Cell]] = createGrid(dimension)
 
   def getCurrentGeneration: Array[Array[Cell]] = grid
 
@@ -37,9 +37,9 @@ final class Grid(private val dimension: Int) {
   }
 
   private def createGrid(dimension: Int): Array[Array[Cell]] = {
-    grid = Array.fill(dimension, dimension)(new DeadCell(List()))
+    val grid:Array[Array[Cell]] = Array.fill(dimension, dimension)(new DeadCell(List()))
     updateNeighbors
-    grid;
+    grid
   }
 
   private def updateNeighbors = {
