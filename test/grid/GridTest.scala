@@ -57,6 +57,45 @@ class GridTest extends FunSpec with ShouldMatchers {
     }
   }
 
+  describe("Playing the game of life with one live column in the middle of the grid") {
+    val subjectGrid:Grid = new Grid(3)
+
+    subjectGrid.setLiveCellAt(0, 1)
+    subjectGrid.setLiveCellAt(1, 1)
+    subjectGrid.setLiveCellAt(2, 1)
+
+    it("should show the first generation as a line of live cells on row two") {
+      val nextGen = subjectGrid.getNextGeneration
+
+      nextGen(0).foreach(_.isLive should be (false))
+      nextGen(1).foreach(_.isLive should be (true))
+      nextGen(2).foreach(_.isLive should be (false))
+
+      assertNeighborsProperlyLinked(nextGen)
+    }
+
+    it ("should show the second generation as a line of live cells on column two") {
+      val nextGen = subjectGrid.getNextGeneration
+
+      val transposedGen = nextGen.transpose
+      transposedGen(0).foreach(_.isLive should be (false))
+      transposedGen(1).foreach(_.isLive should be (true))
+      transposedGen(2).foreach(_.isLive should be (false))
+
+      assertNeighborsProperlyLinked(nextGen)
+    }
+
+    it("should show the third generation as a line of live cells on row two") {
+      val nextGen = subjectGrid.getNextGeneration
+
+      nextGen(0).foreach(_.isLive should be (false))
+      nextGen(1).foreach(_.isLive should be (true))
+      nextGen(2).foreach(_.isLive should be (false))
+
+      assertNeighborsProperlyLinked(nextGen)
+    }
+  }
+
   def assertNeighborsProperlyLinked(arrayGrid: Array[Array[Cell]]) {
     arrayGrid.foreach { row: Array[Cell] =>
       row.foreach { cell: Cell =>

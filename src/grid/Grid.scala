@@ -4,10 +4,24 @@ import cell.{LiveCell, Cell, DeadCell}
 
 final class Grid(private val dimension: Int) {
 
+  private val neighborsOfCellAt = (i:Int, j:Int) => List((i-1, j-1), (i+1, j+1), (i+1, j-1), (i-1, j+1),
+                                                         (i-1, j)  , (i  , j-1), (i+1, j)  , (i  , j+1))
+
   private var grid: Array[Array[Cell]] = createGrid(dimension)
 
   def getCurrentGeneration: Array[Array[Cell]] = {
     return grid;
+  }
+
+  def getNextGeneration: Array[Array[Cell]] = {
+    for (i <- 0 to dimension - 1) {
+      for (j <- 0 to dimension - 1) {
+        grid(i)(j) = grid(i)(j).getNextGeneration
+      }
+    }
+    updateNeighbors
+
+    return grid
   }
 
   def setLiveCellAt(row:Int, column:Int) = {
@@ -32,14 +46,16 @@ final class Grid(private val dimension: Int) {
 
   private def createGrid(dimension: Int): Array[Array[Cell]] = {
     grid = Array.fill(dimension, dimension)(new DeadCell(List()))
+    updateNeighbors
+    return grid;
+  }
+
+  private def updateNeighbors = {
     for (i <- 0 to dimension - 1) {
       for (j <- 0 to dimension - 1) {
-        val neighbors = List((i-1, j-1), (i+1, j+1), (i+1, j-1), (i-1, j+1),
-                             (i-1, j)  , (i  , j-1), (i+1, j)  , (i  , j+1))
-        grid(i)(j).neighbors = neighborList(neighbors)
+        grid(i)(j).neighbors = neighborList(neighborsOfCellAt(i, j))
       }
     }
-    return grid;
   }
 
   private def neighborList(indices: List[(Int, Int)]): List[Cell] = {
