@@ -4,9 +4,6 @@ import cell.{LiveCell, Cell, DeadCell}
 
 final class Grid(private val dimension: Int) {
 
-  private val neighborsOfCellAt = (i:Int, j:Int) => List((i-1, j-1), (i+1, j+1), (i+1, j-1), (i-1, j+1),
-                                                         (i-1, j)  , (i  , j-1), (i+1, j)  , (i  , j+1))
-
   private var grid: Array[Array[Cell]] = createGrid(dimension)
 
   def getCurrentGeneration: Array[Array[Cell]] = grid
@@ -22,13 +19,11 @@ final class Grid(private val dimension: Int) {
     grid
   }
 
-  def setLiveCellAt(row:Int, column:Int) = {
+  def setLiveCellAt(row:Int, column:Int) =
     grid(row)(column) = newCellWithUpdatedNeighbors(grid(row)(column), true)
-  }
 
-  def setDeadCellAt(row:Int, column:Int) = {
+  def setDeadCellAt(row:Int, column:Int) =
     grid(row)(column) = newCellWithUpdatedNeighbors(grid(row)(column), false)
-  }
 
   private def newCellWithUpdatedNeighbors(oldCell:Cell, isLive:Boolean): Cell = {
     val newCell = if(isLive) new LiveCell(oldCell.neighbors) else new DeadCell(oldCell.neighbors)
@@ -50,12 +45,13 @@ final class Grid(private val dimension: Int) {
   private def updateNeighbors = {
     for (i <- 0 to dimension - 1) {
       for (j <- 0 to dimension - 1) {
-        grid(i)(j).neighbors = neighborList(neighborsOfCellAt(i, j))
+        val neighborIndices = for(r <- i-1 to i+1; c <- j-1 to j+1) yield (r, c)
+        grid(i)(j).neighbors = neighborList(neighborIndices.filter(!_.equals((i,j))))
       }
     }
   }
 
-  private def neighborList(indices: List[(Int, Int)]): List[Cell] = {
+  private def neighborList(indices: IndexedSeq[(Int, Int)]): List[Cell] = {
     if (indices.isEmpty) {
       Nil
     } else {
